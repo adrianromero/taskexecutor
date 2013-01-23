@@ -127,7 +127,7 @@ public class TaskEditor extends TaskWindow implements DocumentListener, TaskProv
         // desktophints = (Map) Toolkit.getDefaultToolkit().getDesktopProperty("awt.font.desktophints");
         // desktophints.get(RenderingHints.KEY_TEXT_ANTIALIASING);
         // textArea.setTextAntiAliasHint("VALUE_TEXT_ANTIALIAS_ON");
-        // textArea.setTextAntiAliasHint("VALUE_TEXT_ANTIALIAS_LCD_HRGB");
+        textArea.setAntiAliasingEnabled(true);
         // textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
         textArea.getDocument().addDocumentListener(this);
         textArea.setFont(new Font(Font.MONOSPACED, textAreaHidden.getFont().getStyle(), textAreaHidden.getFont().getSize()));
