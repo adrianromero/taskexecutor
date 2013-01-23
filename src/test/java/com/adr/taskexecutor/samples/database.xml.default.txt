@@ -1,0 +1,12 @@
+({
+    db: {
+        driver: "org.apache.derby.jdbc.EmbeddedDriver",
+        URL: "jdbc:derby:/home/adrian/personal/taskexecutor/db;create=true",
+        user: "",
+        password: ""
+    },
+    category: "fruits",
+    file: {
+        name: "/home/adrian/personal/taskexecutor/test/com/adr/taskexecutor/samples/database_products.csv"
+    }
+})

@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<task title="Products-Create" firststep="step_start">
+
+    <include>/com/adr/taskexecutor/tools/Database.js</include>
+
+<!--
+    CREATE TABLE PRODUCTS(
+        ID VARCHAR(256),
+        REFERENCE VARCHAR(256),
+        NAME VARCHAR(1024),
+        BARCODE VARCHAR(256),
+        CATEGORY VARCHAR(256),
+        PRICE VARCHAR(256),
+        PRIMARY KEY (ID))
+-->
+
+    <main><![CDATA[
+
+        process.db = new tools.Database(
+            process.parameter.db.driver,
+            process.parameter.db.URL,
+            process.parameter.db.user,
+            process.parameter.db.password);
+       closeables.push(process.db);
+        
+    ]]></main>
+
+    <step name="step_start">
+        <run><![CDATA[
+
+            logger.info("Starting products task");
+            return "create_table";
+
+        ]]></run>
+    </step>
+
+    <step name="create_table">
+        <run><![CDATA[
+
+	    process.db.execute(
+	     "CREATE TABLE PRODUCTS( "
+        + "ID VARCHAR(256), "
+        + "REFERENCE VARCHAR(256), "
+        + "NAME VARCHAR(1024), "
+        + "BARCODE VARCHAR(256), "
+        + "CATEGORY VARCHAR(256), "
+        + "PRICE VARCHAR(256), "
+        + "PRIMARY KEY (ID))");
+
+
+        ]]></run>
+    </step>
+</task>

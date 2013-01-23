@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<task title="Products-read" language="javascript" firststep="step_start">
+
+    <include>/com/adr/taskexecutor/tools/Database.js</include>
+
+    <main><![CDATA[
+        process.db = new tools.Database(
+            process.parameter.db.driver,
+            process.parameter.db.URL,
+            process.parameter.db.user,
+            process.parameter.db.password);
+        closeables.push(process.db);
+    ]]></main>
+
+    <step name="step_start">
+        <run><![CDATA[
+            logger.info("Starting products task");
+            return "read_table";
+        ]]></run>
+    </step>
+
+
+    <step name="read_table">
+        <main><![CDATA[
+            var query = process.db.Query("SELECT * FROM PRODUCTS");
+            query.execute();
+            iterator = query;
+        ]]></main>
+        <run><![CDATA[
+            return "log";
+        ]]></run>
+    </step>
+
+    <step name="log">
+        <run><![CDATA[
+            tools.log("products", "log", row);
+        ]]></run>
+    </step>
+</task>

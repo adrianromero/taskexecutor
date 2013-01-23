@@ -1,0 +1,8 @@
+({
+    db: {
+        driver: "org.apache.derby.jdbc.EmbeddedDriver",
+        URL: "jdbc:derby:/home/adrian/personal/taskexecutor/db;create=true",
+        user: "",
+        password: ""
+    }
+})

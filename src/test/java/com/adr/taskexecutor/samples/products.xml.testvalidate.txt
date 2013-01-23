@@ -1,0 +1,5 @@
+({
+    file: {
+        name: "/home/adrian/personal/taskexecutor/test/com/adr/taskexecutor/samples/products.csv"
+    }
+})

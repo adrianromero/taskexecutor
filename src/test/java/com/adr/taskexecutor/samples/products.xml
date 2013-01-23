@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<task title="Products-load" firststep="step_start">
+
+    <include>/com/adr/taskexecutor/tools/CSVRead.js</include>
+    <include>/com/adr/taskexecutor/tools/Database.js</include>
+
+<!--
+    CREATE TABLE PRODUCTS(
+        ID VARCHAR(256),
+        REFERENCE VARCHAR(256),
+        NAME VARCHAR(1024),
+        BARCODE VARCHAR(256),
+        CATEGORY VARCHAR(256),
+        PRICE VARCHAR(256),
+        PRIMARY KEY (ID))
+-->
+
+	<main><![CDATA[
+		process.db = new tools.Database(
+            process.parameter.db.driver,
+            process.parameter.db.URL,
+            process.parameter.db.user,
+            process.parameter.db.password);
+		closeables.push(process.db);     
+	]]></main>
+
+    <step name="step_start">
+        <run><![CDATA[
+
+            logger.info("Starting products task");
+            return "clear_table";
+
+        ]]></run>
+    </step>
+
+    <step name="clear_table">
+        <run><![CDATA[
+	    process.db.execute("DELETE FROM PRODUCTS");
+	    return "step_readcsv";
+        ]]></run>
+    </step>
+
+    <step name="step_readcsv">
+        <main><![CDATA[
+            var csvfile = new tools.CSVRead(process.parameter.file.name);
+            csvfile.separator = ",";
+            iterator = csvfile;
+        ]]></main>
+        <run><![CDATA[
+            return "step_log";
+        ]]></run>
+    </step>
+
+    <step name="step_log">
+        <run><![CDATA[
+            tools.log("products", "mylog", row);
+            return "step_insert";
+        ]]></run>
+    </step>
+
+    <step name="step_insert">
+        <main><![CDATA[
+            var ins = process.db.Update(
+                "INSERT INTO PRODUCTS(ID, REFERENCE, NAME, BARCODE, CATEGORY, PRICE) VALUES(?, ?, ?, ?, ?, ?)",
+                ["id", "reference", "name", "barcode", "category", "price"]);
+            closeables.push(ins);
+        ]]></main>
+        <run><![CDATA[
+            row.id = java.util.UUID.randomUUID().toString();
+            ins.execute(row);
+        ]]></run>
+    </step>
+</task>

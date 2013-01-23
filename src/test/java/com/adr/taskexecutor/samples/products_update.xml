@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<task title="Products-update" firststep="step_start">
+
+    <include>/com/adr/taskexecutor/tools/Database.js</include>
+
+    <main><![CDATA[
+        process.db = new tools.Database(
+            process.parameter.db.driver,
+            process.parameter.db.URL,
+            process.parameter.db.user,
+            process.parameter.db.password);
+	   closeables.push(process.db);
+    ]]></main>
+
+    <step name="step_start">
+        <run><![CDATA[
+            logger.info("Starting products process");
+            row = {ID: "2", REFERENCE: "1", NAME: "Products", BARCODE: "1111", CATEGORY: "fruits", PRICE: "1.55"};
+            return "update";
+        ]]></run>
+    </step>
+
+    <step name="update">
+        <main><![CDATA[
+            var ins = process.db.Upsert(
+                "PRODUCTS", ["REFERENCE", "NAME", "BARCODE", "CATEGORY", "PRICE"], ["ID"]);
+            closeables.push(ins);
+        ]]></main>
+        <run><![CDATA[
+            ins.execute(row);
+        ]]></run>
+    </step>
+</task>

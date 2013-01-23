@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<task title="database-tests">
+
+    <include>/com/adr/taskexecutor/tools/CSVSave.js</include>
+    <include>/com/adr/taskexecutor/tools/Database.js</include>
+
+    <main><![CDATA[
+
+	    process.conn = new tools.Database(
+	        process.parameter.db.driver,
+	        process.parameter.db.URL,
+	        process.parameter.db.user,
+	        process.parameter.db.password);
+	
+	    process.conn.autoCommit = false;
+	    process.conn.commitPeriod = 100;
+	    closeables.push(process.conn);
+
+    ]]></main>
+        
+    <step name="start">
+        <run><![CDATA[
+	    logger.info("Start. Logging from task");
+	    return "step_readtable";    
+        ]]></run>
+
+    </step>
+
+    <step name="step_readtable">
+        <main><![CDATA[
+
+		var query = process.conn.Query("SELECT ID, NAME, PRICE FROM PRODUCTS WHERE CATEGORY = ?", ["category"]);
+		query.execute({category: process.parameter.category});
+		iterator = query;        
+
+        ]]></main>
+        <run><![CDATA[
+    		return "step_save";
+        ]]></run>
+    </step>
+
+
+    <step name="step_save">
+        <main><![CDATA[
+            var csvfile = new tools.CSVSave(process.parameter.file.name);
+            csvfile.separator = ",";
+            csvfile.headers = ["ID", "NAME", "PRICE"];
+            csvfile.init();
+            closeables.push(csvfile);   
+        ]]></main>
+        <run><![CDATA[
+        	tools.log("products", "log", row);
+		csvfile.write(row);
+        ]]></run>
+    </step>
+
+</task>

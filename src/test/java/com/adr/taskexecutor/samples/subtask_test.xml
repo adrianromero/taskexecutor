@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<task title="Subtask_test" firststep="step_start">
+    <step name="step_start">
+        <run><![CDATA[
+
+        logger.info("Calling subtask");
+        environment.runProcess("formats_test", process.parameter);
+        logger.info("Returning subtask");
+        
+        ]]></run>
+    </step>
+</task>

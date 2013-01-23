@@ -1,0 +1,21 @@
+ScriptEngineManager mgr = new ScriptEngineManager();
+ScriptEngine jsEngine = mgr.getEngineByName("JavaScript");
+jsEngine.eval("function getArray() {return [1,2,3,4,5];};");
+Object result = jsEngine.eval("getArray();");
+
+NativeArray arr = (NativeArray) result;
+Object [] array = new Object[(int) arr.getLength()];
+for (Object o : arr.getIds()) {
+    int index = (Integer) o;
+    array[index] = arr.get(index, null);
+}
+
+
+
+
+http://mxr.mozilla.org/mozilla/source/js/rhino/examples/Foo.java
+
+http://www.mozilla.org/rhino/tutorial.html#javaScriptHostObjects
+http://lxr.mozilla.org/mozilla/source/js/rhino/examples/Counter.java
+http://mxr.mozilla.org/mozilla/source/js/rhino/examples/RunScript4.java
+
